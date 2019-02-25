@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<script src="https://d3js.org/d3.v4.min.js"></script>
+
+<style type="text/css">
+
+/*Add styling here */
+
+/* *14* Play around with axis label styling*/
+/*.axis text {
+  font-size: 12px;
+  font-family: "Times New Roman", Times, serif;
+  fill: #777;
+}*/
+
+</style>
+
+<body>
+  <div id=#titleDiv> 
+    <h1>D3 Nobel Project</h1>
+  </div>
+  <div id=#authorDiv> 
+
+  </div>
+
+</body>
+
+
+
+<script>
+
+function titleCase(str) {
+  // lowercases word, 
+   var splitStr = str.toLowerCase().split(' ');
+   for (var i = 0; i < splitStr.length; i++) {
+       // You do not need to check if i is larger than splitStr length, as your for does that for you
+       // Assign it back to the array
+       splitStr[i] = splitStr[i].charAt(0).toLowerCase() + splitStr[i].substring(1);     
+   }
+   // Directly return the joined string
+   return splitStr.join(' '); 
+}
+
+// set the dimensions and margins of the graph
+var margin = {top: 20, right: 20, bottom: 50, left: 150},
+    width = 1100 - margin.left - margin.right,
+    height = 600 - margin.top - margin.bottom;
+
+// set the ranges
+var y = d3.scaleBand()
+          .range([height, 0])
+          .padding(0.1);
+
+var x = d3.scaleLinear()
+          .range([0, width-200]);
+          
+// append the svg object to the body of the page
+// append a 'group' element to 'svg'
+// moves the 'group' element to the top left margin
+var chart1 = d3.select("body")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", 
+          "translate(" + margin.left + "," + margin.top + ")");
+
+
+
+
+// read data
+
+// d3.csv("/data/archi/ve.csv", ready);
+
+d3.csv("/data/archive.csv", function(data) {
+  console.log(data);
+});
+
+
+
+// function ready1(error, data) {
+
+
+//   if (error) return console.warn(error);
+
+//   data.forEach(function(d) {
+//     d.Height = +d.Height;
+//     d.Eye = titleCase(d['Eye Color'])
+//   });
+
+
+
+//  }
+
+
+
+</script>
