@@ -6,35 +6,94 @@
     <script src="//d3js.org/topojson.v1.min.js"></script>
     <style type="text/css">
 
-div.tooltip { 
-    position: absolute;     
-    text-align: left; 
-    width: 190px;          
-    height: 65px;  
-    padding: 5px;       
-    font: 14px sans-serif;    
-    background: white; 
-    border: rgba(0,0,0,0.3) solid 1px;
-    pointer-events: none;  
-    opacity: 0.3;   
-}
+    div.tooltip { 
+      position: absolute;     
+      text-align: left; 
+      width: 190px;          
+      height: 74px;  
+      padding: 5px;       
+      font: 14px sans-serif;    
+      background: white; 
+      border: rgba(0,0,0,0.3) solid 1px;
+      pointer-events: none;  
+      opacity: 0.3;   
+    }
 
+/*  <defs>
+  <pattern id="img1" width="100" height="100">
+  <image xlink:href="flag.png" x="0" y="0" width="100" height="150" />
+  </pattern>
+  </defs>*/
+
+    </style>
+    <style>
+    .container {
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    .bar1, .bar2, .bar3 {
+      width: 35px;
+      height: 5px;
+      background-color: #333;
+      margin: 6px 0;
+      transition: 0.4s;
+    }
+
+    .change .bar1 {
+      -webkit-transform: rotate(-45deg) translate(-9px, 6px);
+      transform: rotate(-45deg) translate(-9px, 6px);
+    }
+
+    .change .bar2 {opacity: 0;}
+
+    .change .bar3 {
+      -webkit-transform: rotate(45deg) translate(-8px, -8px);
+      transform: rotate(45deg) translate(-8px, -8px);
+    }
     </style>
   </head>
 
 <body>
 
+  <div class="container" onclick="myFunction(this)">
+    <div class="bar1"></div>
+    <div class="bar2"></div>
+    <div class="bar3"></div>
+  </div>
+  
   <div id=#titleDiv> 
     <h1>Nobel Laureates</h1>
-      <button id="byCountry"> Sort by Country</button>
-      <button id="byYear"> Sort by Year</button>
+    
+    <input name="updateButton" 
+           type="button" 
+           value="Sort by Gender" 
+           onclick="byGender()" />
+
+    <input name="updateButton" 
+           type="button" 
+           value="Sort by Country" 
+           onclick="byCountry()" />
+
+    <input name="updateButton" 
+           type="button" 
+           value="Sort by Year" 
+           onclick="byYear()" />
+
   </div>
   <div id="drop" align=center></div>
-  
+  <select id="d3-dropdown">
+  <option value="first">Hello</option>
+  </select>
+
+  <p id="selected-dropdown"></p>
+
 </body>
 
 <script>
 
+var selected = d3.select("#d3-dropdown").node().value;
+console.log(selected);
 
 var w = 1200
 var h = 1200
@@ -48,8 +107,8 @@ var margin = {
 }
 
 var gendercolor = d3.scaleOrdinal()
-  .domain(['Male', 'Female'])
-  .range(["#ED7D31", "#4472C4"]);
+  .domain(['Male', 'Female', ''])
+  .range(["#ED7D31", "#4472C4", "#5add92"]);
 
 var width = w - margin.right - margin.left;
 var height = h - margin.top - margin.bottom;
@@ -72,11 +131,25 @@ d3.csv("data/archive.csv", function(error, data){
 
 	if (error) return console.warn(error);
 
-/*  var category = d3.nest()
+  // Get every column value
+/*  var elements = Object.keys(data[0])
+    .filter(function(d){
+      return ((d == "Year") | (d == "Category") | (d == "Organization Name"));
+    });
+  var selection = elements[0];*/
+
+  var category = d3.nest()
     .key(function(d){ return d.Category })
     .entries(data)
 
-  console.log(category)*/
+/*  svg.append("defs")
+     .append("pattern")
+     .attr("id", "img1")
+     .attr("patternUnits", "userSpaceOnUse")
+   .append("image")
+     .attr("xlink:href", "flag.png")
+     .attr('width', 10)
+     .attr('height', 20);*/
 
   svg.append("text")
     .attr("x", 0)
@@ -127,176 +200,81 @@ d3.csv("data/archive.csv", function(error, data){
     .style("font-family", "Helvetica")
 
 
-  d3.select("#byYear").on("click", function() {
-
-    var category = d3.nest()
-      .key(function(d){ return d.Category })
-      .entries(data)
-
-    console.log(category)
-
-    var plots = svg.selectAll("g")
-      .data(category)
-      .enter()
-      .append("g")
-      .attr("transform", function(d, i){ 
-        if(d.key == "Medicine"){
-          return "translate(410," + ((i * 0)) + ")" 
-        }
-        if(d.key == "Literature"){
-          return "translate(610," + ((i * 0)) + ")" 
-        }
-        if(d.key == "Physics"){
-          return "translate(210," + ((i * 0)) + ")" 
-        }
-        if(d.key == "Economics"){
-          return "translate(810," + ((i * 0)) + ")" 
-        }
-        if(d.key == "Peace"){
-          return "translate(1010," + ((i * 0)) + ")" 
-        }
-         else {
-          "translate(10," + ((i * 150)) + ")"
-        }
-      });
+  var plots = svg.selectAll("g")
+    .data(category)
+    .enter()
+    .append("g")
+    .attr("transform", function(d, i){ 
+      if(d.key == "Medicine"){
+        return "translate(410," + ((i * 0)) + ")" 
+      }
+      if(d.key == "Literature"){
+        return "translate(610," + ((i * 0)) + ")" 
+      }
+      if(d.key == "Physics"){
+        return "translate(210," + ((i * 0)) + ")" 
+      }
+      if(d.key == "Economics"){
+        return "translate(810," + ((i * 0)) + ")" 
+      }
+      if(d.key == "Peace"){
+        return "translate(1010," + ((i * 0)) + ")" 
+      }
+        else {
+        "translate(10," + ((i * 150)) + ")"
+      }
+    });
     
-    console.log(plots)
+    //console.log(plots)
 
-
-    plots.selectAll(".rect")
-      .data(function(d){ return d.values})
-      .enter()
-      .append("rect")
-      .attr("width", 22)
-      .attr("height", 22)
-      .attr("x", function(d, i){
-        var colIndex = i % numCols
-        return colIndex * 24
-      })
-      .attr("y", function(d, i){
-        var rowIndex = Math.floor(i/numCols)
-        return rowIndex * 24
-      })
-      .attr("r", 6)
-      //.style("fill", "#e2c642")
-      .style("fill", function(d) { return gendercolor(d.Sex); })
-      .style("stroke", "none")
-      .on("mouseover", function(d){
-              div.transition()
-              .duration(100)
-              .style("opacity", 0.9) // changes opacity of text box
-              var element = d3.select(this)
-              element.style("fill", "yellow")
-            div.html("<span style = 'font-weight: bold'>" + d["Full Name"] + "</span>" + "<br>" + "<span style = 'font-style: italic'>" + d["Birth Country"] + " " + "(" + d.Year + ")" + "</span>")
-                  .style("font-family", "Helvetica")
-            div.style("visibility", "visible")
-            .style("left", (d3.event.pageX - 20) + "px")
-            .style("top", (d3.event.pageY - 35) + "px")
-          })
-      .on("mousemove", function(d){
-            div.style("left", (d3.event.pageX - 20) + "px")    
-            .style("top", (d3.event.pageY - 65) + "px")
-          })
-      .on("mouseout", function(d){
-            div.transition()
-            .duration(500)
-            div.style("visibility", "hidden")
-            var element = d3.select(this)
-            //element.style("fill", "#e2c642")
-            element.style("fill", function(d) { return gendercolor(d.Sex); })
-          });
-  })
-
-  // button to arrange by birth country
-  d3.select("#byCountry").on("click", function() {
-  
-    data1 = data
-    data1 = data1.sort(function(a, b) {
-      return d3.ascending(a["Birth Country"], b["Birth Country"])
+  plots.selectAll(".rect")
+    .data(function(d){ return d.values})
+    .enter()
+    .append("rect")
+    .attr("width", 22)
+    .attr("height", 22)
+    .attr("x", function(d, i){
+      var colIndex = i % numCols
+      return colIndex * 24
     })
-    
-
-    var cat = d3.nest()
-      .key(function(d){ return d.Category })
-      .entries(data1)
-
-    console.log(cat)
-
-    var plt = svg.selectAll("g")
-      .data(cat)
-      .enter()
-      .append("g")
-      .attr("transform", function(d, i){ 
-        if(d.key == "Medicine"){
-          return "translate(410," + ((i * 0)) + ")" 
-        }
-        if(d.key == "Literature"){
-          return "translate(610," + ((i * 0)) + ")" 
-        }
-        if(d.key == "Physics"){
-          return "translate(210," + ((i * 0)) + ")" 
-        }
-        if(d.key == "Economics"){
-          return "translate(810," + ((i * 0)) + ")" 
-        }
-        if(d.key == "Peace"){
-          return "translate(1010," + ((i * 0)) + ")" 
-        }
-         else {
-          "translate(10," + ((i * 150)) + ")"
-        }
-      });
-
-    console.log(plt)
-
-    plt.selectAll(".rect")
-      .data(function(d){ return d.values})
-      .enter()
-      .append("rect")
-      .attr("width", 22)
-      .attr("height", 22)
-      .attr("x", function(d, i){
-        var colIndex = i % numCols
-        return colIndex * 24
-      })
-      .attr("y", function(d, i){
-        var rowIndex = Math.floor(i/numCols)
-        return rowIndex * 24
-      })
-      .attr("r", 6)
-      //.style("fill", "#e2c642")
-      .style("fill", function(d) { return gendercolor(d.Sex); })
-      .style("stroke", "none")
-      .on("mouseover", function(d){
-              div.transition()
-              .duration(100)
-              .style("opacity", 0.9) // changes opacity of text box
-              var element = d3.select(this)
-              element.style("fill", "yellow")
-            div.html("<span style = 'font-weight: bold'>" + d["Full Name"] + "</span>" + "<br>" + "<span style = 'font-style: italic'>" + d["Birth Country"] + " " + "(" + d.Year + ")" + "</span>")
-                  .style("font-family", "Helvetica")
-            div.style("visibility", "visible")
-            .style("left", (d3.event.pageX - 20) + "px")
-            .style("top", (d3.event.pageY - 35) + "px")
-          })
-      .on("mousemove", function(d){
-            div.style("left", (d3.event.pageX - 20) + "px")    
-            .style("top", (d3.event.pageY - 65) + "px")
-          })
-      .on("mouseout", function(d){
+    .attr("y", function(d, i){
+      var rowIndex = Math.floor(i/numCols)
+      return rowIndex * 24
+    })
+    .attr("r", 6)
+    //.style("fill", "#e2c642")
+    .style("fill", function(d) { return gendercolor(d.Sex); })
+    .style("stroke", "none")
+    .on("mouseover", function(d){
             div.transition()
-            .duration(500)
-            div.style("visibility", "hidden")
+            .duration(100)
+            .style("opacity", 0.9) // changes opacity of text box
             var element = d3.select(this)
-            //element.style("fill", "#e2c642")
-            element.style("fill", function(d) { return gendercolor(d.Sex); })
-          });
+            //element.style("fill", "url(#img1)")
+            //element.style("fill", "#de2910")
+            element.style("fill", "yellow")
+          div.html("<span style = 'font-weight: bold'>" + d["Full Name"] + "</span>" + "<br>" + "<span style = 'font-style: italic'>" + d["Birth Country"] + " " + "(" + d.Year + ")" + "</span>")
+                .style("font-family", "Helvetica")
+          div.style("visibility", "visible")
+          .style("left", (d3.event.pageX - 20) + "px")
+          .style("top", (d3.event.pageY - 35) + "px")
+        })
+    .on("mousemove", function(d){
+          div.style("left", (d3.event.pageX - 20) + "px")    
+          .style("top", (d3.event.pageY - 65) + "px")
+        })
+    .on("mouseout", function(d){
+          div.transition()
+          .duration(500)
+          div.style("visibility", "hidden")
+          var element = d3.select(this)
+          //element.style("fill", "#e2c642")
+          element.style("fill", function(d) { return gendercolor(d.Sex); })
+        });
 
-  })
 
-
-// DROPDOWN MENU //
-/*  var selector = d3.select("#drop")
+  ////////////// DROPDOWN MENU //////////////
+  /*var selector = d3.select("#drop")
       .append("select")
       .attr("id","dropdown")
       .on("change", function(d){
@@ -328,7 +306,7 @@ d3.csv("data/archive.csv", function(error, data){
               .transition()
               .call(yAxis);
 
-         });
+      });
 
   selector.selectAll("option")
       .data(elements)
@@ -339,10 +317,437 @@ d3.csv("data/archive.csv", function(error, data){
       .text(function(d){
         return d;
       })*/
-
-
-
 })
+
+
+  // button to arrange by gender
+  function byGender(){
+
+    d3.csv("data/archive.csv", function(error, data){
+
+    if (error) return console.warn(error);
+
+    d3.select("svg").remove()
+
+    var svg = d3.select("body")
+      .append("svg")
+      .attr("id", "chart")
+      .attr("width", w)
+      .attr("height", h)
+      .append("g")
+      .attr("transform", "translate(0" + margin.left + "," + margin.top + ")");
+
+    var data = data.sort(function(a, b) {
+        return d3.ascending(a.Sex,b.Sex);
+      });
+
+    var category = d3.nest()
+      .key(function(d){ return d.Category })
+      .entries(data)
+
+    svg.append("text")
+      .attr("x", 0)
+      .attr("y", -30)
+      .text("Chemistry")
+      .style("font-weight", "bold")
+      .style("font-size", 20)
+      .style("font-family", "Helvetica")
+
+    svg.append("text")
+      .attr("x", 210)
+      .attr("y", -30)
+      .text("Physics")
+      .style("font-weight", "bold")
+      .style("font-size", 20)
+      .style("font-family", "Helvetica")
+
+    svg.append("text")
+      .attr("x", 410)
+      .attr("y", -30)
+      .text("Medicine")
+      .style("font-weight", "bold")
+      .style("font-size", 20)
+      .style("font-family", "Helvetica")
+
+    svg.append("text")
+      .attr("x", 610)
+      .attr("y", -30)
+      .text("Literature")
+      .style("font-weight", "bold")
+      .style("font-size", 20)
+      .style("font-family", "Helvetica")
+
+    svg.append("text")
+      .attr("x", 810)
+      .attr("y", -30)
+      .text("Economics")
+      .style("font-weight", "bold")
+      .style("font-size", 20)
+      .style("font-family", "Helvetica")
+
+    svg.append("text")
+      .attr("x", 1010)
+      .attr("y", -30)
+      .text("Peace")
+      .style("font-weight", "bold")
+      .style("font-size", 20)
+      .style("font-family", "Helvetica")
+
+    var plots = svg.selectAll("g")
+      .data(category)
+      .enter()
+      .append("g")
+      .attr("transform", function(d, i){ 
+        if(d.key == "Medicine"){
+          return "translate(410," + ((i * 0)) + ")" 
+        }
+        if(d.key == "Literature"){
+          return "translate(610," + ((i * 0)) + ")" 
+        }
+        if(d.key == "Physics"){
+          return "translate(210," + ((i * 0)) + ")" 
+        }
+        if(d.key == "Economics"){
+          return "translate(810," + ((i * 0)) + ")" 
+        }
+        if(d.key == "Peace"){
+          return "translate(1010," + ((i * 0)) + ")" 
+        }
+         else {
+          "translate(10," + ((i * 150)) + ")"
+        }
+        
+      })
+
+    plots.selectAll(".rect")
+      .data(function(d){ return d.values})
+      .enter()
+      .append("rect")
+      .attr("width", 22)
+      .attr("height", 22)
+      .attr("x", function(d, i){
+        var colIndex = i % numCols
+        return colIndex * 24
+      })
+      .attr("y", function(d, i){
+        var rowIndex = Math.floor(i/numCols)
+        return rowIndex * 24
+      })
+      .attr("r", 6)
+      //.style("fill", "#e2c642")
+      .style("fill", function(d) { return gendercolor(d.Sex); })
+      .style("stroke", "none")
+      .on("mouseover", function(d){
+            div.transition()
+            .duration(100)
+            .style("opacity", 0.9) // changes opacity of text box
+            var element = d3.select(this)
+            element.style("fill", "yellow")
+          div.html("<span style = 'font-weight: bold'>" + d["Full Name"] + "</span>" + "<br>" + "<span style = 'font-style: italic'>" + d["Birth Country"] + " " + "(" + d.Year + ")" + "</span>")
+                .style("font-family", "Helvetica")
+          div.style("visibility", "visible")
+          .style("left", (d3.event.pageX - 20) + "px")
+          .style("top", (d3.event.pageY - 35) + "px")
+        })
+      .on("mousemove", function(d){
+          div.style("left", (d3.event.pageX - 20) + "px")    
+          .style("top", (d3.event.pageY - 65) + "px")
+        })
+      .on("mouseout", function(d){
+          div.transition()
+          .duration(500)
+          div.style("visibility", "hidden")
+          var element = d3.select(this)
+          //element.style("fill", "#e2c642")
+          element.style("fill", function(d) { return gendercolor(d.Sex); })
+        });
+    });
+  }
+
+  // button to arrange by birth country
+  function byCountry(){
+
+    d3.csv("data/archive.csv", function(error, data){
+
+    if (error) return console.warn(error);
+
+    d3.select("svg").remove()
+
+    var svg = d3.select("body")
+      .append("svg")
+      .attr("id", "chart")
+      .attr("width", w)
+      .attr("height", h)
+      .append("g")
+      .attr("transform", "translate(0" + margin.left + "," + margin.top + ")");
+
+    var data = data.sort(function(a, b) {
+      return d3.ascending(a["Birth Country"], b["Birth Country"]);
+    });
+
+    var category = d3.nest()
+      .key(function(d){ return d.Category })
+      .entries(data)
+
+    svg.append("text")
+      .attr("x", 0)
+      .attr("y", -30)
+      .text("Chemistry")
+      .style("font-weight", "bold")
+      .style("font-size", 20)
+      .style("font-family", "Helvetica")
+
+    svg.append("text")
+      .attr("x", 210)
+      .attr("y", -30)
+      .text("Physics")
+      .style("font-weight", "bold")
+      .style("font-size", 20)
+      .style("font-family", "Helvetica")
+
+    svg.append("text")
+      .attr("x", 410)
+      .attr("y", -30)
+      .text("Medicine")
+      .style("font-weight", "bold")
+      .style("font-size", 20)
+      .style("font-family", "Helvetica")
+
+    svg.append("text")
+      .attr("x", 610)
+      .attr("y", -30)
+      .text("Literature")
+      .style("font-weight", "bold")
+      .style("font-size", 20)
+      .style("font-family", "Helvetica")
+
+    svg.append("text")
+      .attr("x", 810)
+      .attr("y", -30)
+      .text("Economics")
+      .style("font-weight", "bold")
+      .style("font-size", 20)
+      .style("font-family", "Helvetica")
+
+    svg.append("text")
+      .attr("x", 1010)
+      .attr("y", -30)
+      .text("Peace")
+      .style("font-weight", "bold")
+      .style("font-size", 20)
+      .style("font-family", "Helvetica")
+
+    var plots = svg.selectAll("g")
+      .data(category)
+      .enter()
+      .append("g")
+      .attr("transform", function(d, i){ 
+        if(d.key == "Medicine"){
+          return "translate(410," + ((i * 0)) + ")" 
+        }
+        if(d.key == "Literature"){
+          return "translate(610," + ((i * 0)) + ")" 
+        }
+        if(d.key == "Physics"){
+          return "translate(210," + ((i * 0)) + ")" 
+        }
+        if(d.key == "Economics"){
+          return "translate(810," + ((i * 0)) + ")" 
+        }
+        if(d.key == "Peace"){
+          return "translate(1010," + ((i * 0)) + ")" 
+        }
+         else {
+          "translate(10," + ((i * 150)) + ")"
+        }
+        
+      })
+
+
+    plots.selectAll(".rect")
+      .data(function(d){ return d.values})
+      .enter()
+      .append("rect")
+      .attr("width", 22)
+      .attr("height", 22)
+      .attr("x", function(d, i){
+        var colIndex = i % numCols
+        return colIndex * 24
+      })
+      .attr("y", function(d, i){
+        var rowIndex = Math.floor(i/numCols)
+        return rowIndex * 24
+      })
+      .attr("r", 6)
+      //.style("fill", "#e2c642")
+      .style("fill", function(d) { return gendercolor(d.Sex); })
+      .style("stroke", "none")
+      .on("mouseover", function(d){
+            div.transition()
+            .duration(100)
+            .style("opacity", 0.9) // changes opacity of text box
+            var element = d3.select(this)
+            element.style("fill", "yellow")
+          div.html("<span style = 'font-weight: bold'>" + d["Full Name"] + "</span>" + "<br>" + "<span style = 'font-style: italic'>" + d["Birth Country"] + " " + "(" + d.Year + ")" + "</span>")
+                .style("font-family", "Helvetica")
+          div.style("visibility", "visible")
+          .style("left", (d3.event.pageX - 20) + "px")
+          .style("top", (d3.event.pageY - 35) + "px")
+        })
+      .on("mousemove", function(d){
+          div.style("left", (d3.event.pageX - 20) + "px")    
+          .style("top", (d3.event.pageY - 65) + "px")
+        })
+      .on("mouseout", function(d){
+          div.transition()
+          .duration(500)
+          div.style("visibility", "hidden")
+          var element = d3.select(this)
+          //element.style("fill", "#e2c642")
+          element.style("fill", function(d) { return gendercolor(d.Sex); })
+        });
+    });
+  }
+
+  // button to arrange by year
+  function byYear(){
+
+    d3.csv("data/archive.csv", function(error, data){
+
+    if (error) return console.warn(error);
+
+    d3.select("svg").remove()
+
+    var svg = d3.select("body")
+      .append("svg")
+      .attr("id", "chart")
+      .attr("width", w)
+      .attr("height", h)
+      .append("g")
+      .attr("transform", "translate(0" + margin.left + "," + margin.top + ")");
+
+    var category = d3.nest()
+      .key(function(d){ return d.Category })
+      .entries(data)
+
+    svg.append("text")
+      .attr("x", 0)
+      .attr("y", -30)
+      .text("Chemistry")
+      .style("font-weight", "bold")
+      .style("font-size", 20)
+      .style("font-family", "Helvetica")
+
+    svg.append("text")
+      .attr("x", 210)
+      .attr("y", -30)
+      .text("Physics")
+      .style("font-weight", "bold")
+      .style("font-size", 20)
+      .style("font-family", "Helvetica")
+
+    svg.append("text")
+      .attr("x", 410)
+      .attr("y", -30)
+      .text("Medicine")
+      .style("font-weight", "bold")
+      .style("font-size", 20)
+      .style("font-family", "Helvetica")
+
+    svg.append("text")
+      .attr("x", 610)
+      .attr("y", -30)
+      .text("Literature")
+      .style("font-weight", "bold")
+      .style("font-size", 20)
+      .style("font-family", "Helvetica")
+
+    svg.append("text")
+      .attr("x", 810)
+      .attr("y", -30)
+      .text("Economics")
+      .style("font-weight", "bold")
+      .style("font-size", 20)
+      .style("font-family", "Helvetica")
+
+    svg.append("text")
+      .attr("x", 1010)
+      .attr("y", -30)
+      .text("Peace")
+      .style("font-weight", "bold")
+      .style("font-size", 20)
+      .style("font-family", "Helvetica")
+
+    var plots = svg.selectAll("g")
+      .data(category)
+      .enter()
+      .append("g")
+      .attr("transform", function(d, i){ 
+        if(d.key == "Medicine"){
+          return "translate(410," + ((i * 0)) + ")" 
+        }
+        if(d.key == "Literature"){
+          return "translate(610," + ((i * 0)) + ")" 
+        }
+        if(d.key == "Physics"){
+          return "translate(210," + ((i * 0)) + ")" 
+        }
+        if(d.key == "Economics"){
+          return "translate(810," + ((i * 0)) + ")" 
+        }
+        if(d.key == "Peace"){
+          return "translate(1010," + ((i * 0)) + ")" 
+        }
+         else {
+          "translate(10," + ((i * 150)) + ")"
+        }
+        
+      })
+
+    plots.selectAll(".rect")
+      .data(function(d){ return d.values})
+      .enter()
+      .append("rect")
+      .attr("width", 22)
+      .attr("height", 22)
+      .attr("x", function(d, i){
+        var colIndex = i % numCols
+        return colIndex * 24
+      })
+      .attr("y", function(d, i){
+        var rowIndex = Math.floor(i/numCols)
+        return rowIndex * 24
+      })
+      .attr("r", 6)
+      //.style("fill", "#e2c642")
+      .style("fill", function(d) { return gendercolor(d.Sex); })
+      .style("stroke", "none")
+      .on("mouseover", function(d){
+            div.transition()
+            .duration(100)
+            .style("opacity", 0.9) // changes opacity of text box
+            var element = d3.select(this)
+            element.style("fill", "yellow")
+          div.html("<span style = 'font-weight: bold'>" + d["Full Name"] + "</span>" + "<br>" + "<span style = 'font-style: italic'>" + d["Birth Country"] + " " + "(" + d.Year + ")" + "</span>")
+                .style("font-family", "Helvetica")
+          div.style("visibility", "visible")
+          .style("left", (d3.event.pageX - 20) + "px")
+          .style("top", (d3.event.pageY - 35) + "px")
+        })
+      .on("mousemove", function(d){
+          div.style("left", (d3.event.pageX - 20) + "px")    
+          .style("top", (d3.event.pageY - 65) + "px")
+        })
+      .on("mouseout", function(d){
+          div.transition()
+          .duration(500)
+          div.style("visibility", "hidden")
+          var element = d3.select(this)
+          //element.style("fill", "#e2c642")
+          element.style("fill", function(d) { return gendercolor(d.Sex); })
+        });
+    });
+  }
 
 
 
