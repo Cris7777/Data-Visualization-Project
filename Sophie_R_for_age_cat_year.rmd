@@ -55,12 +55,16 @@ physics_age
 ```
 
 ```{r}
-#left join tables by year and output the new dataset
-m1 = merge(x = chemistry_age, y = econ_age, all.x = TRUE)
+#left join tables by unique year (1901 - 2016) and output the new dataset
+year = data.frame(unique(nobel_age_cat_year$Year))
+colnames(year) = c("Year")
+m0 = merge(x = year, y = chemistry_age, all.x = TRUE)
+m1 = merge(x = m0, y = econ_age, all.x = TRUE)
 m2 = merge(x = m1, y = lit_age, all.x = TRUE)
 m3 = merge(x = m2, y = med_age, all.x = TRUE)
 m4 = merge(x = m3, y = peace_age, all.x = TRUE)
 age_year = merge(x = m4, y = physics_age, all.x = TRUE)
 age_year
+#replace NA with blank
 write.csv(age_year, "Age_in_Categories_by_Year.csv", na = "")
 ```
