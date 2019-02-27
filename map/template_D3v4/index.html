@@ -118,14 +118,14 @@ var path = d3.geoPath().projection(projection);
 svg.call(tip);
 
 queue()
-    .defer(d3.json, "world_map.geo.json")
+    .defer(d3.json, "world_countries.json")
     .defer(d3.tsv, "world_population.tsv")
     .await(ready);
 
 function ready(error, data, population) {
   var populationById = {};
 
-  population.forEach(function(d) { populationById[d.name] = +d.population; });
+  population.forEach(function(d) { populationById[d.id] = +d.population; });
   data.features.forEach(function(d) { d.population = populationById[d.id] });
 
   svg.append("g")
@@ -134,7 +134,7 @@ function ready(error, data, population) {
       .data(data.features)
     .enter().append("path")
       .attr("d", path)
-      .style("fill", function(d) { return color(populationById[d.properties.name]); })
+      .style("fill", function(d) { return color(populationById[d.id]); })
       .style('stroke', 'white')
       .style('stroke-width', 1.5)
       .style("opacity",0.8)
