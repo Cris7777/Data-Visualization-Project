@@ -64,8 +64,59 @@ body {
 }
 
 </style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+    .dropbtn {
+      background-color: #508fcb;
+      color: white;
+      padding: 9px;
+      font-size: 16px;
+      border: none;
+    }
+
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #d0e3f1;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+    }
+
+    .dropdown-content a {
+      color: black;
+      padding: 5px 8px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown-content a:hover {background-color: #ccc}
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    .dropdown:hover .dropbtn {
+      background-color: #d0e3f1;
+    }
+</style>
+
 </head>
 <body>
+  <div class="dropdown">
+    <button class="dropbtn">Menu</button>
+    <div class="dropdown-content">
+      <a href="/main_page.html"><i class="fa fa-home"></i></a>
+      <a href="/prototype_fu.html">Analysis by Category</a>
+      <a href="/map/map.html">Analysis by Country</a>
+    </div>
+  </div>
 <script src="http://d3js.org/d3.v3.js"></script>
 <script>
 
@@ -88,7 +139,9 @@ var yScale = d3.scale.linear()
     .range([height, 0]);
 
 // 5 Custom DDV colors
-var color = d3.scale.ordinal().range(["#48A36D",  "#80A8CE",  "#9788CD", "#E37756", "#E2AA59"]);
+/*var color = d3.scale.ordinal().range(["#48A36D",  "#56AE7C",  "#64B98C", "#72C39B", "#80CEAA", "#80CCB3", "#7FC9BD", "#7FC7C6", "#7EC4CF", "#7FBBCF", "#7FB1CF", "#80A8CE", "#809ECE", "#8897CE", "#8F90CD", "#9788CD", "#9E81CC", "#AA81C5", "#B681BE", "#C280B7", "#CE80B0", "#D3779F", "#D76D8F", "#DC647E", "#E05A6D", "#E16167", "#E26962", "#E2705C", "#E37756", "#E38457", "#E39158", "#E29D58", "#E2AA59", "#E0B15B", "#DFB95C", "#DDC05E", "#DBC75F", "#E3CF6D", "#EAD67C", "#F2DE8A"]);  */
+
+var color = d3.scale.ordinal().range(["#48A36D",  "#80A8CE",  "#9788CD", "#E37756", "#E2AA59", "#DC647E"]);
 
 var xAxis = d3.svg.axis()
     .scale(xScale)

@@ -76,7 +76,61 @@
     }
 
 </style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+    .dropbtn {
+      background-color: #508fcb;
+      color: white;
+      padding: 9px;
+      font-size: 16px;
+      border: none;
+    }
+
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #d0e3f1;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+    }
+
+    .dropdown-content a {
+      color: black;
+      padding: 5px 8px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown-content a:hover {background-color: #ccc}
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    .dropdown:hover .dropbtn {
+      background-color: #d0e3f1;
+    }
+</style>
+
 <body>
+
+  <div class="dropdown">
+    <button class="dropbtn">Menu</button>
+    <div class="dropdown-content">
+      <a href="../main_page.html"><i class="fa fa-home"></i></a>
+      <a href="../age.html">Analysis by Age</a>
+      <a href="../prototype_fu.html">Analysis by Category</a>
+    </div>
+  </div>
+
   <div id=#titleDiv> 
     <h1>Nobel Laureates: Change in Countries</h1>
 
