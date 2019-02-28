@@ -1,0 +1,70 @@
+```{r}
+#load data
+nobel = read.csv("nobel_age.csv", header = TRUE)
+head(nobel)
+```
+
+```{r}
+nobel_age_cat_year = data.frame(nobel[, c("Year", "Category", "Age")])
+head(nobel_age_cat_year)
+```
+
+```{r}
+library(dplyr)
+```
+
+```{r}
+#subset year and age for each category
+#group by Year, calculate mean of ages for each category
+chemistry = nobel_age_cat_year[which(nobel_age_cat_year$Category == "Chemistry"), ][, c("Year", "Age")]
+chemistry
+chemistry_age = chemistry %>% group_by (Year) %>% summarise(Age = round(mean(Age), 0))
+colnames(chemistry_age) = c("Year", "Chemstry")
+chemistry_age
+
+econ = nobel_age_cat_year[which(nobel_age_cat_year$Category == "Economics"), ][, c("Year", "Age")]
+econ
+econ_age = econ %>% group_by(Year) %>% summarise(Age = round(mean(Age), 0))
+colnames(econ_age) = c("Year", "Economics")
+econ_age
+
+lit = nobel_age_cat_year[which(nobel_age_cat_year$Category == "Literature"), ][, c("Year", "Age")]
+lit
+lit_age = lit %>% group_by(Year) %>% summarise(Age = round(mean(Age), 0))
+colnames(lit_age) = c("Year", "Literature")
+lit_age
+
+med = nobel_age_cat_year[which(nobel_age_cat_year$Category == "Medicine"), ][, c("Year", "Age")]
+med
+med_age = med %>% group_by(Year) %>% summarise(Age = round(mean(Age), 0))
+colnames(med_age) = c("Year", "Medicine")
+med_age
+
+
+peace = nobel_age_cat_year[which(nobel_age_cat_year$Category == "Peace"), ][, c("Year", "Age")]
+peace
+peace_age = peace %>% group_by(Year) %>% summarise(Age = round(mean(Age), 0))
+colnames(peace_age) = c("Year", "Peace")
+peace_age
+
+physics = nobel_age_cat_year[which(nobel_age_cat_year$Category == "Physics"), ][, c("Year", "Age")]
+physics
+physics_age = physics %>% group_by(Year) %>% summarise(Age = round(mean(Age), 0))
+colnames(physics_age) = c("Year", "Physics")
+physics_age
+```
+
+```{r}
+#left join tables by unique year (1901 - 2016) and output the new dataset
+year = data.frame(unique(nobel_age_cat_year$Year))
+colnames(year) = c("Year")
+m0 = merge(x = year, y = chemistry_age, all.x = TRUE)
+m1 = merge(x = m0, y = econ_age, all.x = TRUE)
+m2 = merge(x = m1, y = lit_age, all.x = TRUE)
+m3 = merge(x = m2, y = med_age, all.x = TRUE)
+m4 = merge(x = m3, y = peace_age, all.x = TRUE)
+age_year = merge(x = m4, y = physics_age, all.x = TRUE)
+age_year
+#replace NA with blank
+write.csv(age_year, "Age_in_Categories_by_Year.csv", na = "")
+```
