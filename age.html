@@ -66,56 +66,27 @@ body {
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<style>
-    .dropbtn {
-      background-color: #508fcb;
-      color: white;
-      padding: 9px;
-      font-size: 16px;
-      border: none;
-    }
-
-    .dropdown {
-      position: relative;
-      display: inline-block;
-    }
-
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      background-color: #d0e3f1;
-      min-width: 160px;
-      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-      z-index: 1;
-    }
-
-    .dropdown-content a {
-      color: black;
-      padding: 5px 8px;
-      text-decoration: none;
-      display: block;
-    }
-
-    .dropdown-content a:hover {background-color: #ccc}
-
-    .dropdown:hover .dropdown-content {
-      display: block;
-    }
-
-    .dropdown:hover .dropbtn {
-      background-color: #d0e3f1;
-    }
-</style>
-
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
-  <div class="dropdown">
-    <button class="dropbtn">Menu</button>
-    <div class="dropdown-content">
-      <a href="/main_page.html"><i class="fa fa-home"></i></a>
-      <a href="/prototype_fu.html">Analysis by Category</a>
-      <a href="/map/map.html">Analysis by Country</a>
-    </div>
+  <div class="container">
+    <div class='page-header'>
+    <div class='btn-toolbar pull-right'>
+        <div class="btn-group">
+          <button type="button" class="btn btn-default">Menu</button>
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-right" role="menu">
+            <li><a href="/main_page.html"><i class="fa fa-home"></i></a></li>
+            <li><a href="/waffle_chart.html">Analysis by Prize</a></li>
+            <li><a href="/map/map.html">Analysis by Country</a></li>
+          </ul>
+        </div>
+  </div>
+  </div>
   </div>
 <script src="http://d3js.org/d3.v3.js"></script>
 <script>
@@ -192,9 +163,11 @@ svg.append("defs")
     .attr("width", width)
     .attr("height", height); 
 
+
 //end slider part----------------------------------------------------------------------------------- 
 
-d3.csv("age_by_cate.csv", function(error, data) { // Color domain is each category
+d3.csv("age_by_cate.csv", function(error, data) { // Color domain is each category 
+
   color.domain(d3.keys(data[0]).filter(function(key) { // Set the domain of the color ordinal scale to be all the csv headers except "date", matching a color to an issue
     return key !== "date"; 
   }));
@@ -384,7 +357,7 @@ d3.csv("age_by_cate.csv", function(error, data) { // Color domain is each catego
   focus.append("text") // http://stackoverflow.com/questions/22064083/d3-js-multi-series-chart-with-y-value-tracking
         .attr("class", "tooltip")
         .attr("x", width + 20) // position tooltips  
-        .attr("y", function (d, i) { return (legendSpace)+i*(legendSpace); }); // (return (11.25/2 =) 5.625) + i * (5.625) // position tooltips       
+        .attr("y", function (d, i) { return (legendSpace)+i*(legendSpace); }); // (return (11.25/2 =) 5.625) + i * (5.625) // position tooltips 
 
   // Add mouseover events for hover line.
   d3.select("#mouse-tracker") // select chart plot background rect #mouse-tracker
