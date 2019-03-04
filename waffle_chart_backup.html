@@ -74,7 +74,7 @@ div.tooltip {
 
 <script>
 
-var w = 1600
+var w = 1200
 var h = 1200
 var numCols = 5;
 
@@ -118,10 +118,7 @@ function ColorbyGender(){
       d.Agg = d.Sex
   })
 
-    var color_ref_local = ['Male', 'Female', 'Other'] // Catching Remaining Values as 'Other'
-    var color_list_local = [ "#ED7D31", "#4472C4", "#cccccc"]
-
-    ready(data,color_ref_local,color_list_local)
+    ready(data)
   }
 }
 
@@ -144,16 +141,12 @@ d3.csv("data/archive.csv", pickbCountry)
                 }
   })
 
-    var color_ref_local = ['United States of America', 'United Kingdom', 'Germany', 
-                'Other'] // Catching Remaining Values as 'Other'
-    var color_list_local = ["#ED7D31", "#00247D", "#FFCE00","#cccccc"]
-    ready(data, color_ref_local, color_list_local)
+    ready(data)
 
   }
 }
 
 function ColorbydCountry(){
-
 
 d3.csv("data/archive.csv", pickdCountry)
 
@@ -170,23 +163,16 @@ d3.csv("data/archive.csv", pickdCountry)
                 }else{
                   d.Agg = "Other"
                 }
-   
   })
 
-    var color_ref_local = ['United States of America', 'United Kingdom', 'Germany', 
-                'Other'] // Catching Remaining Values as 'Other'
-      
-    var color_list_local = ["#ED7D31", "#00247D", "#FFCE00","#cccccc"]
-
-    ready(data, color_ref_local, color_list_local)
-
+    ready(data)
 
   }
 }
 
-  function ready(data, color_ref_local, color_list_local){
+  function ready(data){
 
-    plotall(data,color_ref_local,color_list_local) // Default selection
+    plotall(data) // Default selection
 
     d3.select("#Chronological")
         .on("click", function() {
@@ -195,7 +181,7 @@ d3.csv("data/archive.csv", pickdCountry)
       return d3.ascending(a.Year, b.Year)
     })
 
-    plotall(chrodata,color_ref_local,color_list_local)
+    plotall(chrodata)
   })
 
     d3.select("#Grouped")
@@ -205,7 +191,7 @@ d3.csv("data/archive.csv", pickdCountry)
       return d3.ascending(a.Agg, b.Agg)
     })
 
-    plotall(grpdata,color_ref_local,color_list_local)
+    plotall(grpdata)
   });
 }
 
@@ -213,7 +199,7 @@ d3.csv("data/archive.csv", pickdCountry)
   return array.indexOf(value) > -1;
 }
 
-  function plotall(data, color_ref_local, color_list_local){
+  function plotall(data){
 
   d3.select("svg").remove()
 
@@ -303,10 +289,6 @@ d3.csv("data/archive.csv", pickdCountry)
         
       })
 
-
-
-      //
-
     plots.selectAll(".rect")
       .data(function(d){ return d.values})
       .enter()
@@ -349,38 +331,7 @@ d3.csv("data/archive.csv", pickdCountry)
             //element.style("fill", "#e2c642")
             element.style("fill", function(d) { return colormap(d.Agg) })
           })
-
-
-          //legend
-        var legendRectSize = 18;                                  
-        var legendSpacing = 4;
-        var legend = svg.selectAll(".legend")
-            .data(color_list_local).enter()
-            .append('g')
-            .attr("class", "legend")
-            .attr("height", 100)
-            .attr("width", 100)
-            .attr('transform', function(d, i) {                     
-            var height = legendRectSize + legendSpacing;          
-            var offset =  height * color_list_local.length / 2;    
-            var horz = 25 * legendRectSize + 720;                   
-            var vert = i * height - offset+50;           
-            return 'translate(' + horz + ',' + vert + ')';  
-          }); 
-
-          legend.append('rect')                        
-          .attr('width', legendRectSize)          
-          .attr('height', legendRectSize)          
-          .style('fill', function(d,i){ return color_list_local[i]; })                                
-          .style('stroke', color_list_local);                           
-                
-        legend.append('text')                            
-          .attr('x', legendRectSize + legendSpacing)         
-          .attr('y', legendRectSize - legendSpacing)        
-          .text(function(d,i) { return color_ref_local[i] ; })
-          .style('font-size','12px');
 }
-
 
 </script>
     
