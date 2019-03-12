@@ -84,19 +84,12 @@
             <li><a href="/map/map.html">Analysis by Country</a></li>
           </ul>
         </div>
-  </div>
+    </div>
 
 <style>
 .btn-group {
   margin-right: 60px;
   margin-top: 0px;
-}
-</style>
-
-<style>
-.picture_div {
-  margin-left: 800px;
-  margin-top: -60px;
 }
 </style>
 
@@ -129,12 +122,12 @@
 <script src="http://d3js.org/d3.v3.js"></script>
 <script>
 
-var margin = {top: 20, right: 200, bottom: 100, left: 50},
+var margin = {top: 60, right: 200, bottom: 100, left: 50},
 //var margin = {right: 40, left: 40,top: 70,bottom: 40},
-    margin2 = { top: 430, right: 10, bottom: 20, left: 40 },
+    margin2 = { top: 470, right: 10, bottom: 20, left: 40 },
     width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom,
-    height2 = 500 - margin2.top - margin2.bottom;
+    height = 540 - margin.top - margin.bottom,
+    height2 = 540 - margin2.top - margin2.bottom;
 
 var parseDate = d3.time.format("%Y%m%d").parse;
 var bisectDate = d3.bisector(function(d) { return d.date; }).left;
