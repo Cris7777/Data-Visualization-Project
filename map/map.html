@@ -91,14 +91,14 @@
 
 <body>
 
-  <div class="container">
-  <div class='btn-toolbar pull-right'>
+
+  <div class='btn-toolbar pull-left'>
         <div class="btn-group">
           <button type="button" class="btn btn-default">Menu</button>
           <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
             <span class="caret"></span>
           </button>
-          <ul class="dropdown-menu dropdown-menu-right" role="menu">
+          <ul class="dropdown-menu dropdown-menu-left" role="menu">
             <li><a href="/main_page.html"><i class="fa fa-home"></i></a></li>
             <li><a href="/age.html">Analysis by Age</a></li>
             <li><a href="/waffle_chart.html">Analysis by Prize</a></li>
@@ -107,7 +107,16 @@
   </div>
   </div>
 
-  <div id=#titleDiv>
+<style>
+.btn-group {
+  margin-left: 40px;
+}
+</style>
+
+
+  <div class="container">
+
+      <div id="titleDiv">
 
       <input name="updateButton" 
            type="button" 
@@ -120,6 +129,16 @@
            onclick="byDeath()" />
 
   </div>
+
+
+
+<style>
+.container{
+  margin-top: 40px;
+}
+</style>
+
+
 
 </body>
 <script src="http://d3js.org/d3.v4.min.js"></script>
@@ -138,7 +157,7 @@
                 return "<strong>Country: </strong><span class='details'>" + d.properties.name + "<br></span>" + "<strong>Number of Laureates: </strong><span class='details'>" + format(d.population) +"</span>";
               })
 
-  var margin = {top: -200, right: 0, bottom: 0, left: 0},
+  var margin = {top: -200, right: 40, bottom: 0, left: 0},
               width = 960 - margin.left - margin.right,
               height = 500 - margin.top - margin.bottom;
 
