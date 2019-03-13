@@ -1,16 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-<meta charset="utf-8">
-
-<div id=#titleDiv> 
-<h1>Explore Nobel Prize Category</h1>
-</div>
-
   <head>
-<!--     <meta charset="utf-8">
+    <meta charset="utf-8">
     <div id=#titleDiv> 
     <h1>Explore Nobel Prize Category</h1>
-    </div> -->
+    </div>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -22,6 +16,8 @@
 div.tooltip { 
     position: absolute;     
     text-align: left; 
+    <!-- width: 190px; --->          
+    <!-- height: 45px; --->
     min-width: 200px;
     max-width: 400px;
     min-height: 50px;
@@ -31,50 +27,30 @@ div.tooltip {
     background: white; 
     border: rgba(0,0,0,0.3) solid 1px;
     pointer-events: none;  
-    opacity: 0.9;   
+    opacity: 0.5;   
 }
 
     </style>
   </head>
   <body>
-    <!-- <div class="container"> -->
-    <div class='btn-toolbar pull-left'>
+    <div class="container">
+    <div class='btn-toolbar pull-right'>
         <div class="btn-group">
           <button type="button" class="btn btn-default">Menu</button>
           <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
             <span class="caret"></span>
           </button>
-          <ul class="dropdown-menu dropdown-menu-left" role="menu">
+          <ul class="dropdown-menu dropdown-menu-right" role="menu">
             <li><a href="/main_page.html"><i class="fa fa-home"></i></a></li>
             <li><a href="/age.html">Analysis by Age</a></li>
             <li><a href="/map/map.html">Analysis by Country</a></li>
           </ul>
         </div>
     </div>
-
-<style>
-.btn-group {
-  margin-right: 0px;
-}
-</style>
-<!--         <div class="container">
-
     </div>
- -->
-    <style>
-      .container{
-        margin-top: 15px;
-        margin-right: 100px;
-        margin-left: 80px;
-      }
-      
-    </style>
-
-        <div class="container">
-
-
 
     <div id=#titleDiv> 
+
 
       <input name="genderButton" 
              type="button" 
@@ -91,28 +67,14 @@ div.tooltip {
              value="Color by Death Country" 
              onclick="ColorbydCountry()" />
 
-      <input name="ageGroupButton" 
-             type="button" 
-             value="Color by Age" 
-             onclick="ColorbyAge()" />
+  </div>
 
-  </div>
-  </div>
-      <style>
-      .container1{
-        margin-top: 0px;
-        margin-right: 100px;
-        margin-left: 1000px;
-      }
-      
-    </style>
-    <div class="container1">
   <div id="drop" align=center></div>
     <div id="buttonContainer">
       <button id="Chronological">Chronological Sort</button>
       <button id="Grouped">Group Sort</button>
     </div>
-    </div>
+
 <script>
 
 var w = 1600
@@ -121,19 +83,16 @@ var numCols = 5;
 
 var margin = {
   right: 40,
-  left: 100,
+  left: 40,
   top: 70,
   bottom: 40
 }
 
-
-var color_ref = ['40-', '40-50', '50-60', '60-70', '70+', //Age
-				'United States of America', 'United Kingdom', 'Germany', 'Alive', // Countries
+var color_ref = ['United States of America', 'United Kingdom', 'Germany', // Countries
                 'Male', 'Female', "", // Gender
                 'Other'] // Catching Remaining Values as 'Other'
 
-var color_list = ["#a6bddb", "#74a9cf", "#3690c0", "#0570b0", "#034e7b", // Age
-				  "#ED7D31", "#00247D", "#FFCE00", "#008000",  // Countries
+var color_list = ["#ED7D31", "#00247D", "#FFCE00", // Countries
                   "#ED7D31", "#4472C4", "#cccccc", // Gender
                   "#cccccc"] // Catching Remaining Values as 'Other'
 
@@ -190,10 +149,7 @@ d3.csv("data/nobel_1pp.csv", pickbCountry)
 
     var color_ref_local = ['United States of America', 'United Kingdom', 'Germany', 
                 'Other'] // Catching Remaining Values as 'Other'
-
-    var color_list_local = ["#ED7D31", "#00247D", "#FFCE00", 
-    			"#cccccc"]
-
+    var color_list_local = ["#ED7D31", "#00247D", "#FFCE00","#cccccc"]
     ready(data, color_ref_local, color_list_local)
 
   }
@@ -220,44 +176,10 @@ d3.csv("data/nobel_1pp.csv", pickdCountry)
    
   })
 
-    var color_ref_local = ['United States of America', 'United Kingdom', 'Germany', 'Alive',  
+    var color_ref_local = ['United States of America', 'United Kingdom', 'Germany', 
                 'Other'] // Catching Remaining Values as 'Other'
       
-    var color_list_local = ["#ED7D31", "#00247D", "#FFCE00", "#008000",
-    			"#cccccc"]
-
-    ready(data, color_ref_local, color_list_local)
-
-
-  }
-}
-
-function ColorbyAge(){
-
-
-d3.csv("data/nobel_1pp.csv", pickAge)
-
-  function pickAge(error, data){
-
-    if (error) return console.warn(error);
-
-    data.forEach(function(d){
-      d.Year = +d.Year;
-      d.Agg = "Other"
-
-      if(isInArray(d['Age Group'], color_ref)){
-                  d.Agg = d['Age Group']
-                }else{
-                  d.Agg = "Other"
-                }
-   
-  })
-
-    var color_ref_local = ['40-', '40-50', '50-60', '60-70', '70+',  
-                'Other'] // Catching Remaining Values as 'Other'
-      
-    var color_list_local = ["#a6bddb", "#74a9cf", "#3690c0", "#0570b0", "#034e7b",
-    			"#cccccc"]
+    var color_list_local = ["#ED7D31", "#00247D", "#FFCE00","#cccccc"]
 
     ready(data, color_ref_local, color_list_local)
 
@@ -364,22 +286,22 @@ d3.csv("data/nobel_1pp.csv", pickAge)
       .append("g")
       .attr("transform", function(d, i){ 
         if(d.key == "Medicine"){
-          return "translate(400," + ((i * 0)) + ")" 
+          return "translate(410," + ((i * 0)) + ")" 
         }
         if(d.key == "Literature"){
-          return "translate(600," + ((i * 0)) + ")" 
+          return "translate(610," + ((i * 0)) + ")" 
         }
         if(d.key == "Physics"){
-          return "translate(200," + ((i * 0)) + ")" 
+          return "translate(210," + ((i * 0)) + ")" 
         }
         if(d.key == "Economics"){
-          return "translate(800," + ((i * 0)) + ")" 
+          return "translate(810," + ((i * 0)) + ")" 
         }
         if(d.key == "Peace"){
-          return "translate(1000," + ((i * 0)) + ")" 
+          return "translate(1010," + ((i * 0)) + ")" 
         }
          else {
-          "translate(0," + ((i * 150)) + ")"
+          "translate(10," + ((i * 150)) + ")"
         }
         
       })
